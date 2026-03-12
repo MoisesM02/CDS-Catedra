@@ -2,17 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Federation;
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TeamController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $feds = Federation::get(['id', 'name']);
+        $teams = Team::query()
+            // 1. Filtering (Search)
+            ->when($request->input('search'), function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            // 2. Sorting
+            ->when($request->input('sort'), function ($query, $sort) use ($request) {
+                $direction = $request->input('direction', 'asc');
+                $query->orderBy($sort, $direction);
+            }, function ($query) {
+                $query->orderBy('name', 'asc'); // Default sort
+            })
+            ->with('federation')
+            ->paginate(15)
+            ->withQueryString(); // Essential: keeps sort/filter in pagination links
+
+        $filters = $request->only('search', 'sort', 'direction');
+
+        return Inertia::render('Team/Index', [
+            'teams' => $teams,
+            'feds' => $feds,
+            'filters' => $filters,
+        ]);
     }
 
     /**

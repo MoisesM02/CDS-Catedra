@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->date('date_of_foundation');
             $table->string('address');
+            $table->string('logo');
             $table->timestamps();
         });
     }
