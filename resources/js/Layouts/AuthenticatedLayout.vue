@@ -51,6 +51,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Teams
                                 </NavLink>
+                                <NavLink
+                                    :href="route('player.index')"
+                                    :active="$page.url.startsWith('/players')"
+                                >
+                                    Players
+                                </NavLink>
                             </div>
                         </div>
 
@@ -160,9 +166,21 @@ const showingNavigationDropdown = ref(false);
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             :href="route('federation.index')"
-                            :active="route().current('federation*')"
+                            :active="$page.url.startsWith('/federations')"
                         >
-                            Dashboard
+                            Federations
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('team.index')"
+                            :active="$page.url.startsWith('/teams')"
+                        >
+                            Teams
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('player.index')"
+                            :active="$page.url.startsWith('/players')"
+                        >
+                            Players
                         </ResponsiveNavLink>
                     </div>
 

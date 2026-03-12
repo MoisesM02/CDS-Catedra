@@ -7,7 +7,7 @@
         <option v-if="placeholder" value="" disabled>
             {{ placeholder }}
         </option>
-
+        <slot/>
         <option
             v-for="option in options"
             :key="option[valueKey]"
@@ -24,20 +24,19 @@ defineProps({
         type: [String, Number],
         default: ''
     },
+    // 1. Make options optional and default to an empty array
     options: {
         type: Array,
-        required: true,
+        default: () => [],
     },
     placeholder: {
         type: String,
         default: 'Select an option...'
     },
-    // The database column to use as the actual value (e.g., 'id')
     valueKey: {
         type: String,
         default: 'id'
     },
-    // The database column to display to the user (e.g., 'name')
     labelKey: {
         type: String,
         default: 'name'
