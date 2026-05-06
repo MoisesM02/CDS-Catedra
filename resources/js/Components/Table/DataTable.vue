@@ -1,6 +1,6 @@
 <template>
-    <div class="overflow-x-auto bg-white rounded shadow">
-        <table class="w-full text-left border-collapse whitespace-nowrap">
+    <div class="overflow-x-auto w-full bg-white rounded shadow">
+        <table class="w-full text-left border-collapse">
             <thead class="bg-gray-50 uppercase text-xs font-semibold text-gray-600">
             <tr>
                 <slot name="header" />
