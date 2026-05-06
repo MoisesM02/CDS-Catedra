@@ -54,7 +54,7 @@ const emit = defineEmits(['close']);
 const submit = () => {
     if (props.isEditing) {
         // If editing, use PUT
-        props.form.put(props.actionUrl, {
+        props.form.patch(props.actionUrl, {
             onSuccess: () => emit('close'),
         });
     } else {
