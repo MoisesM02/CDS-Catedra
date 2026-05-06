@@ -19,6 +19,7 @@
                         :sort="params.sort"
                         :direction="params.direction"
                         @sort="handleSort"
+                        class="min-w-[150px]"
                     >
                         Federation Name
                     </SortableHeader>
@@ -28,7 +29,7 @@
                         :sort="params.sort"
                         :direction="params.direction"
                         @sort="handleSort"
-                        class="w-48"
+                        class="min-w-[150px]"
                     >
                         Foundation Date
                     </SortableHeader>
@@ -37,7 +38,7 @@
                         :sort="params.sort"
                         :direction="params.direction"
                         @sort="handleSort"
-                        class="w-48"
+                        class="min-w-[200px]"
                     >
                         Address
                     </SortableHeader>
@@ -46,7 +47,7 @@
                         :sort="params.sort"
                         :direction="params.direction"
                         @sort="handleSort"
-                        class="w-48"
+                        class="min-w-[100px]"
                     >
                         Logo
                     </SortableHeader>
@@ -58,15 +59,29 @@
                 </template>
 
                 <tr v-for="fed in feds.data" :key="fed.id" class="hover:bg-gray-50">
-                    <td class="px-6 py-4">{{ fed.name }}</td>
-                    <td class="px-6 py-4 text-gray-500">{{ new Date(fed.date_of_foundation).toLocaleDateString() }}</td>
-                    <td class="px-6 py-4"> {{ fed.address}}</td>
-                    <td class="px-6 py-4"> <img :src="fed.logo" :alt="fed.name"/>  </td>
-                    <td class="px-6 py-4 text-right">
+                    <!-- Allow name to wrap if it's really long -->
+                    <td class="px-6 py-4 break-words">{{ fed.name }}</td>
+
+                    <!-- Prevent dates from breaking onto two lines -->
+                    <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
+                        {{ new Date(fed.date_of_foundation).toLocaleDateString() }}
+                    </td>
+
+                    <!-- Allow addresses to wrap naturally -->
+                    <td class="px-6 py-4 break-words">
+                        {{ fed.address }}
+                    </td>
+
+                    <td class="px-6 py-4">
+                        <img :src="fed.logo" :alt="fed.name" class="h-10 w-auto object-contain"/>
+                    </td>
+
+                    <!-- Keep buttons inline -->
+                    <td class="px-6 py-4 text-right whitespace-nowrap space-x-2">
                         <secondary-button @click="openEditModal(fed)">Edit</secondary-button>
+                        <DeleteButton @click="deleteFederation(fed)">Delete</DeleteButton>
                     </td>
                 </tr>
-
             </DataTable>
 
             <Pagination :links="feds.links" />
@@ -148,6 +163,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
+import DeleteButton from "@/Components/Utilities/DeleteButton.vue";
 const props = defineProps({
     feds: Object,
     filters: Object
@@ -223,6 +239,25 @@ const openEditModal = (fed) => {
     form.clearErrors();
     isModalOpen.value = true;
 };
+
+const deleteFederation = (fed) => {
+    // 1. Confirm with the user before deleting
+    if (confirm(`Are you sure you want to delete the federation: ${fed.name}?`)) {
+
+        // 2. Send the DELETE request using Inertia
+        router.delete(`/federations/${fed.id}`, {
+            preserveScroll: true, // Keeps the user's scroll position intact
+            onSuccess: () => {
+                // Optional: You can trigger a toast notification here if you have one
+                console.log('Federation deleted successfully.');
+            },
+            onError: (errors) => {
+                // Optional: Handle any errors returned by the server
+                console.error(errors);
+            }
+        });
+    }
+}
 
 const closeModal = () => {
     isModalOpen.value = false;

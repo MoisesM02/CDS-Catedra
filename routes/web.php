@@ -19,6 +19,9 @@ Route::get('/', function () {
     ]);
 });
 
+/**
+ * This route gets some stats about the federations, clubs and the players
+ */
 Route::get('/dashboard', function () {
     $teams = Team::count();
     $newTeams = Team::where('created_at', '>', now()->subDays(30))->count();
@@ -52,10 +55,10 @@ Route::middleware('auth')->group(function () {
 
     //Federations
     Route::get('/federations', [FederationController::class, 'index'])->name('federation.index');
-    Route::get('/federations/edit/{federation}', [FederationController::class, 'edit'])->name('federation.edit');
     Route::post('/federations', [FederationController::class, 'store'])->name('federation.store');
+    Route::get('/federations/{federation}', [FederationController::class, 'show'])->name('federation.show');
     Route::put('/federations/{federation}', [FederationController::class, 'update'])->name('federation.update');
-
+    Route::delete('/federations/{federation}', [FederationController::class, 'destroy'])->name('federation.destroy');
     //Teams
     Route::get('/teams', [TeamController::class, 'index'])->name('team.index');
 

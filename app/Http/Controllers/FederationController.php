@@ -10,7 +10,9 @@ use Inertia\Inertia;
 class FederationController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Shows the federations and filters them accordingly.
+     * @param Request $request
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
@@ -37,13 +39,6 @@ class FederationController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -65,19 +60,11 @@ class FederationController extends Controller
      */
     public function show(Federation $federation)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Federation $federation)
-    {
-        return Inertia::render('Federation/Edit', [
+        $federation->load('teams');
+        return Inertia::render('Federation/Show', [
             'federation' => $federation,
         ]);
     }
-
     /**
      * Update the specified resource in storage.
      */
@@ -99,6 +86,7 @@ class FederationController extends Controller
      */
     public function destroy(Federation $federation)
     {
-        //
+        $federation->delete();
+        return redirect()->back()->with('success', 'Federation deleted successfully.');
     }
 }
