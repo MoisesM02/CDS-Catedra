@@ -9,6 +9,12 @@ use App\Models\Team;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+//Defining constants
+const FEDERATIONS = "/federations/{federation}";
+const TEAMS = "/teams/{team}";
+const PLAYERS = "/players/{player}";
+const PROFILE = "/profile";
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -56,21 +62,30 @@ Route::middleware('auth')->group(function () {
     //Federations
     Route::get('/federations', [FederationController::class, 'index'])->name('federation.index');
     Route::post('/federations', [FederationController::class, 'store'])->name('federation.store');
-    Route::get('/federations/{federation}', [FederationController::class, 'show'])->name('federation.show');
-    Route::patch('/federations/{federation}', [FederationController::class, 'update'])->name('federation.update');
-    Route::delete('/federations/{federation}', [FederationController::class, 'destroy'])->name('federation.destroy');
+    Route::get(FEDERATIONS, [FederationController::class, 'show'])->name('federation.show');
+    Route::patch(FEDERATIONS, [FederationController::class, 'update'])->name('federation.update');
+    Route::delete(FEDERATIONS, [FederationController::class, 'destroy'])->name('federation.destroy');
+
     //Teams
     Route::get('/teams', [TeamController::class, 'index'])->name('team.index');
+    Route::post('/teams', [TeamController::class, 'store'])->name('team.store');
+    Route::get(TEAMS, [TeamController::class, 'show'])->name('team.show');
+    Route::patch(TEAMS, [TeamController::class, 'update'])->name('team.update');
+    Route::delete(TEAMS, [TeamController::class, 'destroy'])->name('team.destroy');
 
     //Players
     Route::get('/players', [PlayerController::class, 'index'])->name('player.index');
+    Route::post('/players', [PlayerController::class, 'store'])->name('player.store');
+    Route::get(PLAYERS, [PlayerController::class, 'show'])->name('player.show');
+    Route::patch(PLAYERS, [PlayerController::class, 'update'])->name('player.update');
+    Route::delete(PLAYERS, [PlayerController::class, 'destroy'])->name('player.destroy');
 });
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get(PROFILE, [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch(PROFILE, [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete(PROFILE, [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

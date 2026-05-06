@@ -1,4 +1,7 @@
 <template>
+    <Head>
+        <title>Teams</title>
+    </Head>
     <AuthenticatedLayout>
         <div class="p-6 max-w-7xl mx-auto">
             <div class="flex justify-between mb-6">
@@ -109,7 +112,6 @@ import SortableHeader from "@/Components/Table/SortableHeader.vue";
 import InputError from "@/Components/InputError.vue";
 import FormModal from "@/Components/FormModal.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import Dropdown from "@/Components/Dropdown.vue";
 import DynamicSelect from "@/Components/Form/DynamicSelect.vue";
 
 
@@ -133,7 +135,7 @@ const handleSort = (key) => {
 };
 
 // Update URL when searching (Debounced to avoid too many requests)
-watch(search, debounce((value) => {
+watch(search, debounce(() => {
     updateQuery();
 }, 300));
 

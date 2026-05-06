@@ -1,4 +1,7 @@
 <template>
+    <Head>
+        <title>Players</title>
+    </Head>
     <AuthenticatedLayout>
         <div class="p-6 max-w-7xl mx-auto">
             <div class="flex justify-between mb-6">
@@ -165,7 +168,7 @@ const handleSort = (key) => {
 };
 
 // Update URL when searching (Debounced to avoid too many requests)
-watch(search, debounce((value) => {
+watch(search, debounce(() => {
     updateQuery();
 }, 300));
 
