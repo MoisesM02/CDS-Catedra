@@ -1,4 +1,7 @@
 <template>
+    <Head>
+        <title>Federations</title>
+    </Head>
     <AuthenticatedLayout>
         <div class="p-6 max-w-7xl mx-auto">
             <div class="flex justify-between mb-6">
@@ -151,7 +154,7 @@
 
 <script setup>
 import {ref, watch, reactive, computed} from 'vue';
-import {router, useForm} from '@inertiajs/vue3';
+import {Head, router, useForm} from '@inertiajs/vue3';
 import debounce from 'lodash/debounce';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from "@/Components/Pagination.vue";

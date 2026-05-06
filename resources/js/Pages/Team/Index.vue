@@ -1,4 +1,7 @@
 <template>
+    <Head>
+        <title>Teams</title>
+    </Head>
     <AuthenticatedLayout>
         <div class="p-6 max-w-7xl mx-auto">
             <div class="flex justify-between mb-6">
