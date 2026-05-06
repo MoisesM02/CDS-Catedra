@@ -185,7 +185,7 @@ const handleSort = (key) => {
 };
 
 // Update URL when searching (Debounced to avoid too many requests)
-watch(search, debounce((value) => {
+watch(search, debounce(() => {
     updateQuery();
 }, 300));
 
