@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/federations', [FederationController::class, 'index'])->name('federation.index');
     Route::post('/federations', [FederationController::class, 'store'])->name('federation.store');
     Route::get('/federations/{federation}', [FederationController::class, 'show'])->name('federation.show');
-    Route::put('/federations/{federation}', [FederationController::class, 'update'])->name('federation.update');
+    Route::patch('/federations/{federation}', [FederationController::class, 'update'])->name('federation.update');
     Route::delete('/federations/{federation}', [FederationController::class, 'destroy'])->name('federation.destroy');
     //Teams
     Route::get('/teams', [TeamController::class, 'index'])->name('team.index');
