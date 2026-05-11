@@ -59,12 +59,20 @@
                 </template>
 
                 <tr v-for="player in players.data" :key="player.id" class="hover:bg-gray-50">
-                    <td class="px-6 py-4">{{ player.name }}</td>
-                    <td class="px-6 py-4 text-gray-500">{{ player.team.name}}</td>
+                    <td class="whitespace-nowrap text-sm font-medium p-0">
+                        <Link
+                            :href="route('player.show', player)"
+                            class="block px-6 py-4 text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition-colors"
+                        >
+                            {{ player.name }}
+                        </Link>
+                    </td>
+                    <td class="px-6 py-4 text-gray-500">{{ player.current_team?.[0]?.name || 'Free Agent'}}</td>
                     <td class="px-6 py-4 text-gray-500">{{ player.gender}}</td>
                     <td class="px-6 py-4"> {{ new Date(player.date_of_birth).toLocaleDateString()}}</td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-6 py-4 text-right whitespace-nowrap space-x-2">
                         <secondary-button @click="openEditModal(player)">Edit</secondary-button>
+                        <DeleteButton @click="deletePlayer(player)">Delete</DeleteButton>
                     </td>
                 </tr>
 
@@ -120,6 +128,8 @@
                     <DynamicSelect
                         v-model="form.gender"
                         placeholder="Select a gender..."
+                        id="gender"
+
                     >
                         <option value="male">Male</option>
                         <option value="female">Female</option>
@@ -134,7 +144,7 @@
 
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import {Head, router, useForm} from '@inertiajs/vue3'
+import {Head, Link, router, useForm} from '@inertiajs/vue3'
 import Pagination from "@/Components/Pagination.vue";
 import DataTable from "@/Components/Table/DataTable.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -147,6 +157,7 @@ import FormModal from "@/Components/FormModal.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import {computed, reactive, ref, watch} from "vue";
 import debounce from "lodash/debounce";
+import DeleteButton from "@/Components/Utilities/DeleteButton.vue";
 
 const props = defineProps({
     players: Object,
@@ -201,7 +212,6 @@ const editingModel = ref(null); // Will hold the item we are editing, or null if
 const isEditing = computed(() => editingModel.value !== null);
 
 const actionUrl = computed(() => {
-    // Ensure you have these routes defined in web.php!
     return isEditing.value
         ? `/players/${editingModel.value.id}` // PUT route
         : `/players`;                         // POST route
@@ -215,10 +225,12 @@ const openCreateModal = () => {
     isModalOpen.value = true;
 };
 
-const openEditModal = (team) => {
-    editingModel.value = team;  // Set to Edit mode
-    form.name = team.name;      // Populate the form with existing data!
-    form.federation_id = team.federation_id
+const openEditModal = (player) => {
+    editingModel.value = player;
+    form.name = player.name;
+    form.team_id = player.current_team?.[0]?.id || '';
+    form.date_of_birth = player.date_of_birth
+    form.gender = player.gender
     form.clearErrors();
     isModalOpen.value = true;
 };
@@ -227,4 +239,22 @@ const closeModal = () => {
     isModalOpen.value = false;
     setTimeout(() => form.reset(), 300); // Reset form after transition ends
 };
+const deletePlayer = (player) => {
+    // 1. Confirm with the user before deleting
+    if (confirm(`Are you sure you want to delete the team: ${player.name}?`)) {
+
+        // 2. Send the DELETE request using Inertia
+        router.delete(`/players/${player.id}`, {
+            preserveScroll: true, // Keeps the user's scroll position intact
+            onSuccess: () => {
+                // Optional: You can trigger a toast notification here if you have one
+                console.log('Player successfully deleted .');
+            },
+            onError: (errors) => {
+                // Optional: Handle any errors returned by the server
+                console.error(errors);
+            }
+        });
+    }
+}
 </script>

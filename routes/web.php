@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
     //Players
     Route::get('/players', [PlayerController::class, 'index'])->name('player.index');
     Route::post('/players', [PlayerController::class, 'store'])->name('player.store');
+    Route::get('/players/{player}', [PlayerController::class, 'show'])->name('player.show');
     Route::get(PLAYERS, [PlayerController::class, 'show'])->name('player.show');
     Route::patch(PLAYERS, [PlayerController::class, 'update'])->name('player.update');
     Route::delete(PLAYERS, [PlayerController::class, 'destroy'])->name('player.destroy');

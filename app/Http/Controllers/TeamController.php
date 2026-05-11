@@ -55,8 +55,11 @@ class TeamController extends Controller
      */
     public function show(Team $team)
     {
-        $team->load(['federation', 'players']);
-
+        $team->load([
+            'federation',
+            'currentPlayers',
+            'pastPlayers.currentTeam'
+        ]);
         return Inertia::render('Team/Show', [
             'team' => $team,
         ]);

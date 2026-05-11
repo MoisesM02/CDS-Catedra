@@ -6,6 +6,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import ToastNotification from "../Components/Utilities/ToastNotification.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -232,5 +233,7 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </main>
         </div>
+        <!-- Add the Toast Notification Component right here at the bottom -->
+        <ToastNotification />
     </div>
 </template>
