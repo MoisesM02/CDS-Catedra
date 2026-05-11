@@ -20,8 +20,7 @@ class PlayerFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'date_of_birth' => fake()->date(),
-            'team_id' => Team::factory(),
+            'date_of_birth' => fake()->dateTimeBetween('-40 years', '-18 years')->format('Y-m-d'),
             'gender' => fake()->randomElement(['male', 'female']),
         ];
     }

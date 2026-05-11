@@ -50,7 +50,14 @@
                 </template>
 
                 <tr v-for="team in teams.data" :key="team.id" class="hover:bg-gray-50">
-                    <td class="px-6 py-4">{{ team.name }}</td>
+                    <td class="whitespace-nowrap text-sm font-medium p-0">
+                        <Link
+                            :href="route('team.show', team.id)"
+                            class="block px-6 py-4 text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition-colors"
+                        >
+                            {{ team.name }}
+                        </Link>
+                    </td>
                     <td class="px-6 py-4 text-gray-500">{{ team.federation.name}}</td>
                     <td class="px-6 py-4"> {{ new Date(team.created_at).toLocaleString()}}</td>
                     <td class="px-6 py-4 text-right whitespace-nowrap space-x-2">
@@ -100,7 +107,7 @@
 </template>
 
 <script setup>
-import {Head, router, useForm} from '@inertiajs/vue3'
+import {Head, Link, router, useForm} from '@inertiajs/vue3'
 import {computed, reactive, ref, watch} from "vue";
 import debounce from 'lodash/debounce';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
@@ -202,7 +209,7 @@ const deleteTeam = (team) => {
             preserveScroll: true, // Keeps the user's scroll position intact
             onSuccess: () => {
                 // Optional: You can trigger a toast notification here if you have one
-                console.log('Federation deleted successfully.');
+                console.log('Team successfully deleted.');
             },
             onError: (errors) => {
                 // Optional: Handle any errors returned by the server
