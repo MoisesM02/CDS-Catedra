@@ -63,7 +63,14 @@
 
                 <tr v-for="fed in feds.data" :key="fed.id" class="hover:bg-gray-50">
                     <!-- Allow name to wrap if it's really long -->
-                    <td class="px-6 py-4 break-words">{{ fed.name }}</td>
+                    <td class="whitespace-nowrap break-words text-sm font-medium p-0">
+                        <Link
+                            :href="route('federation.show', fed)"
+                            class="block px-6 py-4 text-blue-600 hover:text-blue-900 hover:bg-blue-50 transition-colors"
+                        >
+                            {{ fed.name }}
+                        </Link>
+                    </td>
 
                     <!-- Prevent dates from breaking onto two lines -->
                     <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
@@ -154,7 +161,7 @@
 
 <script setup>
 import {ref, watch, reactive, computed} from 'vue';
-import {Head, router, useForm} from '@inertiajs/vue3';
+import {Head, Link, router, useForm} from '@inertiajs/vue3';
 import debounce from 'lodash/debounce';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from "@/Components/Pagination.vue";

@@ -17,12 +17,7 @@ const PROFILE = "/profile";
 
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/dashboard');
 });
 
 /**
@@ -62,6 +57,7 @@ Route::middleware('auth')->group(function () {
     //Federations
     Route::get('/federations', [FederationController::class, 'index'])->name('federation.index');
     Route::post('/federations', [FederationController::class, 'store'])->name('federation.store');
+    Route::get('/federations/{federation}', [FederationController::class, 'show'])->name('federation.show');
     Route::get(FEDERATIONS, [FederationController::class, 'show'])->name('federation.show');
     Route::patch(FEDERATIONS, [FederationController::class, 'update'])->name('federation.update');
     Route::delete(FEDERATIONS, [FederationController::class, 'destroy'])->name('federation.destroy');
