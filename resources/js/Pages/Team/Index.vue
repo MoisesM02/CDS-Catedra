@@ -44,7 +44,7 @@
                     >
                         Created At
                     </SortableHeader>
-                    <th class="px-6 py-3 text-right w-32">
+                    <th class="px-6 py-3 w-32">
                         Actions
                     </th>
                 </template>
@@ -53,8 +53,9 @@
                     <td class="px-6 py-4">{{ team.name }}</td>
                     <td class="px-6 py-4 text-gray-500">{{ team.federation.name}}</td>
                     <td class="px-6 py-4"> {{ new Date(team.created_at).toLocaleString()}}</td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-6 py-4 text-right whitespace-nowrap space-x-2">
                         <secondary-button @click="openEditModal(team)">Edit</secondary-button>
+                        <DeleteButton @click="deleteTeam(team)">Delete</DeleteButton>
                     </td>
                 </tr>
 
@@ -113,6 +114,7 @@ import InputError from "@/Components/InputError.vue";
 import FormModal from "@/Components/FormModal.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DynamicSelect from "@/Components/Form/DynamicSelect.vue";
+import DeleteButton from "@/Components/Utilities/DeleteButton.vue";
 
 
 const props = defineProps({
@@ -166,7 +168,6 @@ const editingModel = ref(null); // Will hold the item we are editing, or null if
 const isEditing = computed(() => editingModel.value !== null);
 
 const actionUrl = computed(() => {
-    // Ensure you have these routes defined in web.php!
     return isEditing.value
         ? `/teams/${editingModel.value.id}` // PUT route
         : `/teams`;                         // POST route
@@ -192,4 +193,22 @@ const closeModal = () => {
     isModalOpen.value = false;
     setTimeout(() => form.reset(), 300); // Reset form after transition ends
 };
+const deleteTeam = (team) => {
+    // 1. Confirm with the user before deleting
+    if (confirm(`Are you sure you want to delete the team: ${team.name}?`)) {
+
+        // 2. Send the DELETE request using Inertia
+        router.delete(`/teams/${team.id}`, {
+            preserveScroll: true, // Keeps the user's scroll position intact
+            onSuccess: () => {
+                // Optional: You can trigger a toast notification here if you have one
+                console.log('Federation deleted successfully.');
+            },
+            onError: (errors) => {
+                // Optional: Handle any errors returned by the server
+                console.error(errors);
+            }
+        });
+    }
+}
 </script>

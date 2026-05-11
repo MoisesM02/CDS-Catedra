@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
     //Teams
     Route::get('/teams', [TeamController::class, 'index'])->name('team.index');
     Route::post('/teams', [TeamController::class, 'store'])->name('team.store');
+    Route::get('teams/{team}', [TeamController::class, 'show'])->name('team.show');
     Route::get(TEAMS, [TeamController::class, 'show'])->name('team.show');
     Route::patch(TEAMS, [TeamController::class, 'update'])->name('team.update');
     Route::delete(TEAMS, [TeamController::class, 'destroy'])->name('team.destroy');
