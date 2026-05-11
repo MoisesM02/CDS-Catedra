@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TeamRequest;
 use App\Models\Federation;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -41,19 +42,12 @@ class TeamController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TeamRequest $request)
     {
-        //
+        Team::create($request->validated());
+        return redirect()->back()->with('success', 'Team created successfully.');
     }
 
     /**
@@ -61,23 +55,22 @@ class TeamController extends Controller
      */
     public function show(Team $team)
     {
-        //
+        $team->load(['federation', 'players']);
+
+        return Inertia::render('Team/Show', [
+            'team' => $team,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Team $team)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Team $team)
+    public function update(TeamRequest $request, Team $team)
     {
-        //
+        $team->update($request->validated());
+
+        return redirect()->back()->with('success', 'Team updated successfully.');
     }
 
     /**
@@ -85,6 +78,8 @@ class TeamController extends Controller
      */
     public function destroy(Team $team)
     {
-        //
+        $team->delete();
+
+        return redirect()->back()->with('success', 'Team deleted successfully.');
     }
 }
