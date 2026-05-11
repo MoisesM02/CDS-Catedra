@@ -99,7 +99,7 @@ class PlayerController extends Controller
         $player->update($validated);
 
         // 4. Handle the Team Transfer Logic
-        if (array_key_exists('team_id', $request->validated())) {
+        if (array_key_exists('team_id', $validated) || $newTeamId !== null) {
 
             $currentTeamId = $player->currentTeam()->first()?->id;
 

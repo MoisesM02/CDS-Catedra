@@ -10,10 +10,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 //Defining constants
-const FEDERATIONS = "/federations/{federation}";
-const TEAMS = "/teams/{team}";
-const PLAYERS = "/players/{player}";
-const PROFILE = "/profile";
+// Defining constants safely for testing
+if (!defined('FEDERATIONS')) define('FEDERATIONS', '/federations/{federation}');
+if (!defined('TEAMS')) define('TEAMS', '/teams/{team}');
+if (!defined('PLAYERS')) define('PLAYERS', '/players/{player}');
+if (!defined('PROFILE')) define('PROFILE', '/profile');
 
 
 Route::get('/', function () {
