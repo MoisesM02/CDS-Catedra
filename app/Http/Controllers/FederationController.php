@@ -48,7 +48,7 @@ class FederationController extends Controller
         $federationAttributes = $request->validate([
             'name' => ['required', 'string', 'unique:federations,name'],
             'address' => ['required', 'string'],
-            'date_of_foundation' => ['required', 'date', 'date_format:Y-m-d'],
+            'date_of_foundation' => ['required', 'date', 'date_format:Y-m-d', 'before_or_equal:today'],
             'logo' => ['required', 'url'],
         ]);
         Federation::create($federationAttributes);
@@ -60,9 +60,25 @@ class FederationController extends Controller
      */
     public function show(Federation $federation)
     {
-        $federation->load('teams');
+        // Eager load the teams and count their active players
+        $federation->load(['teams' => function ($query) {
+            // alias the count as 'active_players_count'
+            // filter it to only count players where end_date is null
+            $query->withCount(['players as active_players_count' => function ($q) {
+                $q->whereNull('player_team.end_date');
+            }]);
+        }]);
+
+        //  Calculate Top-Level Federation Statistics
+        $totalTeams = $federation->teams->count();
+        $totalActivePlayers = $federation->teams->sum('active_players_count');
+
         return Inertia::render('Federation/Show', [
             'federation' => $federation,
+            'stats' => [
+                'total_teams' => $totalTeams,
+                'total_active_players' => $totalActivePlayers,
+            ]
         ]);
     }
     /**
