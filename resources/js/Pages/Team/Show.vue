@@ -98,7 +98,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import {reactive, computed } from 'vue';
 import { Head } from '@inertiajs/vue3'
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import DataTable from "@/Components/Table/DataTable.vue";
