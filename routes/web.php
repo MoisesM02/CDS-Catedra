@@ -11,10 +11,18 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 //Defining constants
 // Defining constants safely for testing
-if (!defined('FEDERATIONS')) define('FEDERATIONS', '/federations/{federation}');
-if (!defined('TEAMS')) define('TEAMS', '/teams/{team}');
-if (!defined('PLAYERS')) define('PLAYERS', '/players/{player}');
-if (!defined('PROFILE')) define('PROFILE', '/profile');
+if (!defined('FEDERATIONS')){
+    define('FEDERATIONS', '/federations/{federation}');
+}
+if (!defined('TEAMS')) {
+    define('TEAMS', '/teams/{team}');
+}
+if (!defined('PLAYERS')) {
+    define('PLAYERS', '/players/{player}');
+}
+if (!defined('PROFILE')) {
+    define('PROFILE', '/profile');
+}
 
 
 Route::get('/', function () {
@@ -25,28 +33,40 @@ Route::get('/', function () {
  * This route gets some stats about the federations, clubs and the players
  */
 Route::get('/dashboard', function () {
+    // 1. Teams Data
     $teams = Team::count();
     $newTeams = Team::where('created_at', '>', now()->subDays(30))->count();
-    $percentage = $newTeams / $teams * 100;
+
+// The Fix: Check if $teams > 0 before dividing
+    $teamsPercentage = $teams > 0 ? ($newTeams / $teams * 100) : 0;
 
     $teamsData = [
         'count' => $teams,
         'newsCount' => $newTeams,
-        'percentage' => number_format($percentage, 2),
+        'percentage' => number_format($teamsPercentage, 2),
     ];
 
-    $federations = Federation::withCount('teams')->where('teams_count','>', 0)->count();
-    $newFederations = Federation::where('created_at', '>', now()->subDays(30))->count();
-    $percentage = $newFederations / $federations * 100;
 
-    $federationsMostTeams = Federation::withCount('teams')->orderBy('teams_count', 'desc')->take(3)->get();
+// 2. Federations Data
+// Refactored to use has() which is faster and cleaner than withCount()->where()
+    $federations = Federation::has('teams')->count();
+    $newFederations = Federation::where('created_at', '>', now()->subDays(30))->count();
+
+// The Fix: Check if $federations > 0 before dividing
+    $federationsPercentage = $federations > 0 ? ($newFederations / $federations * 100) : 0;
+
+    $federationsMostTeams = Federation::withCount('teams')
+        ->orderByDesc('teams_count')
+        ->take(3)
+        ->get();
+
     $federationsData = [
         'count' => $federations,
         'newsCount' => $newFederations,
-        'percentage' => number_format($percentage, 2),
+        'percentage' => number_format($federationsPercentage, 2),
     ];
 
-    return Inertia::render('Dashboard',[
+    return Inertia::render('Dashboard', [
         'teams_data' => $teamsData,
         'federations_data' => $federationsData,
         'federations_most_teams' => $federationsMostTeams,
