@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignIdFor(Federation::class)->constrained()->cascadeOnUpdate();
+            $table->foreignIdFor(Federation::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }
